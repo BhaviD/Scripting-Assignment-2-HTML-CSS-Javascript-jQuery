@@ -15,12 +15,20 @@
       #output_box {
         padding-right: 20px;
       }
+      #clr_input {
+        padding-left: 10px;
+      }
+      #clr_output {
+        padding-left: 10px;
+      }
     </style>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script language="JavaScript">
-      function run() {
+      function update() {
         window.frames[0].document.body.innerHTML =
         document.getElementById("input_area").value;
       }
@@ -42,15 +50,12 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+        <a class="navbar-brand" href="#">Try It Yourself!</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
-          <li><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li >
-            <button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button>
-          </li>
+          <li id="clr_input"><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
+          <li id="clr_output"><button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button></li>
         </ul>
       </div>
     </div>
@@ -63,7 +68,7 @@
                    wrap="off"
                    autofocus
                    style="border:outset 4px orange;"
-                   oninput="run();"
+                   oninput="update();"
                    class="boundary"></textarea>
     </div>
     <div class="col-lg-6 col-md-6" id="output_box">
