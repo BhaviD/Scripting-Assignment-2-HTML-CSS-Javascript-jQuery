@@ -12,14 +12,8 @@
       p:empty:not(:focus)::before {
         content: attr(data-placeholder);
       }
-      #right-most-button {
-        padding-right: 10px;
-      }
-      #left-most-button {
-        padding-left: 10px;
-      }
-      #input_form {
-        padding-left: 10px;
+      #input_div {
+        padding-left: 20px;
       }
       #output_box {
         padding-right: 20px;
@@ -59,7 +53,7 @@
           <li><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li id="right-most-button">
+          <li >
             <button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button>
           </li>
         </ul>
@@ -68,18 +62,16 @@
   </nav>
 
   <div class="row">
-    <div class="col-lg-6 col-md-6">
-      <form id="input_form">
-          <textarea  id = "input_area"
-                     placeholder = "Enter your code here..."
-                     wrap="off"
-                     autofocus
-                     style="border:outset 4px orange;"
-                     oninput="run();"
-                     class="boundary"></textarea>
-      </form>
+    <div class="col-lg-6 col-md-6" id="input_div">
+        <textarea  id = "input_area"
+                   placeholder = "Enter your code here..."
+                   wrap="off"
+                   autofocus
+                   style="border:outset 4px orange;"
+                   oninput="run();"
+                   class="boundary"></textarea>
     </div>
-    <div class="col-lg-6 col-md-6" id="output_box">
+    <div class="col-lg-6 col-md-6">
       <p class="boundary" id = "output_area" data-placeholder="Output will be displayed here..."></p>
     </div>
   </div>
