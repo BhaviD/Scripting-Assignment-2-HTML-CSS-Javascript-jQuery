@@ -1,45 +1,41 @@
 <html>
-  <head>
-    <title> Try It Yourself!! </title>
-    <style>
-      iframe.boundary {width: 100%; height: 89%;
-                        border-style: outset; border-color: DarkGray;
-                        overflow: auto; padding: 5px 10px; resize: none;}
+<head>
+  <title> Try It Yourself!! </title>
+  <style>
+    iframe.boundary {width: 100%; height: 89%;
+                      border-style: outset; border-color: DarkGray;
+                      overflow: auto; padding: 5px 10px; resize: none;}
 
-      textarea.boundary {width: 100%; height: 90%;
-                         padding: 10px 10px; resize: none;}
+    textarea.boundary {width: 100%; height: 90%;
+                       padding: 10px 10px; resize: none;}
 
-      #input_div {
-        padding-left: 20px;
-      }
-      #output_box {
-        padding-right: 20px;
-      }
-      #clr_input {
-        padding-left: 10px;
-      }
-      #clr_output {
-        padding-left: 10px;
-      }
-    </style>
+    li.usr_btn {padding-left: 10px;}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    #input_div {
+      padding-left: 20px;
+    }
+    #output_box {
+      padding-right: 20px;
+    }
+  </style>
 
-    <script language="JavaScript">
-      function update() {
-        window.frames[0].document.body.innerHTML =
-        document.getElementById("input_area").value;
-      }
-      function clear_output() {
-        window.frames[0].document.body.innerHTML = "<p>Output will be displayed here...</p>";
-      }
-      function clear_input() {
-        document.getElementById("input_area").value = "";
-      }
-    </script>
-  </head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script language="JavaScript">
+    function update() {
+      window.frames[0].document.body.innerHTML =
+      document.getElementById("input_area").value;
+    }
+    function clear_output() {
+      window.frames[0].document.body.innerHTML = "<p>Output will be displayed here...</p>";
+    }
+    function clear_input() {
+      document.getElementById("input_area").value = "";
+    }
+  </script>
+</head>
 
 <body>
   <nav class="navbar navbar-inverse">
@@ -54,8 +50,9 @@
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
-          <li id="clr_input"><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
-          <li id="clr_output"><button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button></li>
+          <li class="usr_btn"><button class="btn btn-success navbar-btn" onclick="update();">Run >></button></li>
+          <li class="usr_btn"><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
+          <li class="usr_btn"><button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button></li>
         </ul>
       </div>
     </div>
