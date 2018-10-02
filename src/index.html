@@ -2,16 +2,13 @@
   <head>
     <title> Try It Yourself!! </title>
     <style>
-      p.boundary {width: 100%; height: 90%;
-                  border-style: outset; border-color: DarkGray;
-                  overflow: auto; padding: 10px 10px; resize: none;}
+      iframe.boundary {width: 100%; height: 89%;
+                        border-style: outset; border-color: DarkGray;
+                        overflow: auto; padding: 5px 10px; resize: none;}
 
       textarea.boundary {width: 100%; height: 90%;
                          padding: 10px 10px; resize: none;}
 
-      p:empty:not(:focus)::before {
-        content: attr(data-placeholder);
-      }
       #input_div {
         padding-left: 20px;
       }
@@ -21,16 +18,14 @@
     </style>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script language="JavaScript">
       function run() {
-        document.getElementById('output_area').innerHTML =
+        window.frames[0].document.body.innerHTML =
         document.getElementById("input_area").value;
       }
       function clear_output() {
-        document.getElementById('output_area').innerHTML = "";
+        window.frames[0].document.body.innerHTML = "<p>Output will be displayed here...</p>";
       }
       function clear_input() {
         document.getElementById("input_area").value = "";
@@ -71,8 +66,8 @@
                    oninput="run();"
                    class="boundary"></textarea>
     </div>
-    <div class="col-lg-6 col-md-6">
-      <p class="boundary" id = "output_area" data-placeholder="Output will be displayed here..."></p>
+    <div class="col-lg-6 col-md-6" id="output_box">
+      <iframe id="output_area" class="boundary" onload="clear_output();"></iframe>
     </div>
   </div>
 </body>
