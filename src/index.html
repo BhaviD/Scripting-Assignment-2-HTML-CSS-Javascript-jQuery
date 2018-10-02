@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title> Try It Yourself!! </title>
+    <style>
+      p.boundary {width: 100%; height: 90%;
+                  border-style: outset; border-color: DarkGray;
+                  overflow: auto; padding: 10px 10px; resize: none;}
+
+      textarea.boundary {width: 100%; height: 90%;
+                         padding: 10px 10px; resize: none;}
+
+      p:empty:not(:focus)::before {
+        content: attr(data-placeholder);
+      }
+      #right-most-button {
+        padding-right: 10px;
+      }
+      #left-most-button {
+        padding-left: 10px;
+      }
+      #input_form {
+        padding-left: 10px;
+      }
+      #output_box {
+        padding-right: 20px;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script language="JavaScript">
+      function run() {
+        document.getElementById('output_area').innerHTML =
+        document.getElementById("input_area").value;
+      }
+      function clear_output() {
+        document.getElementById('output_area').innerHTML = "";
+      }
+      function clear_input() {
+        document.getElementById("input_area").value = "";
+      }
+    </script>
+  </head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><button class="btn btn-danger navbar-btn" onclick="clear_input();">Clear Input</button></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li id="right-most-button">
+            <button class="btn btn-danger navbar-btn" onclick="clear_output();">Clear Output</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-6 col-md-6">
+      <form id="input_form">
+          <textarea  id = "input_area"
+                     placeholder = "Enter your code here..."
+                     wrap="off"
+                     autofocus
+                     style="border:outset 4px orange;"
+                     oninput="run();"
+                     class="boundary"></textarea>
+      </form>
+    </div>
+    <div class="col-lg-6 col-md-6" id="output_box">
+      <p class="boundary" id = "output_area" data-placeholder="Output will be displayed here..."></p>
+    </div>
+  </div>
+</body>
+</html>
