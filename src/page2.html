@@ -2,38 +2,78 @@
 <head>
   <title> The xkcd clone. </title>
   <style>
-    iframe.boundary {width: 100%; height: 89%;
-                      border-style: outset; border-color: DarkGray;
-                      overflow: auto; padding: 5px 10px; resize: none;}
-
-    textarea.boundary {width: 100%; height: 90%;
-                       padding: 10px 10px; resize: none;}
-
     img {
       display: block;
-      /* width: 1000px; */
-      /* height: 600px; */
       object-fit: contain;
       margin-left: auto;
       margin-right: auto;
       min-height: 300px;
       min-width: 300px;
     }
-    #input_div {
-      padding-left: 20px;
-    }
-    #output_box {
-      padding-right: 20px;
+    div.upper {
+      text-transform: uppercase;
     }
   </style>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script>
+    var comic_num;
+    var last_num;
+    $(function() {
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      const url = "https://xkcd.com/info.0.json"; // site that doesn’t send Access-Control-*
+      fetch(proxyurl + url)
+      .then((response) => response.json())
+      .then(function(data) {
+        $("#comic_img").attr('src', data.img);
+        $("#comic_title").html(data.title);
+        last_num = data.num;
+      })
+      .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+    });
 
+    function update_comic(opcode)
+    {
+      switch(opcode)
+      {
+        case 1: // FIRST
+          comic_num = 1;
+          break;
+
+        case 2: // PREV
+          if(comic_num == 1)
+            break;
+          --comic_num;
+          break;
+
+        case 3: // RANDOM
+          comic_num = Math.floor((Math.random() * last_num) + 1);
+          break;
+
+        case 4: // NEXT
+          if(comic_num == last_num)
+            break;
+          ++comic_num;
+          break;
+
+        case 5: // LAST
+          comic_num = last_num;
+          break;
+      }
+
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      const url = "https://xkcd.com/" + comic_num + "/info.0.json"; // site that doesn’t send Access-Control-*
+      fetch(proxyurl + url)
+      .then((response) => response.json())
+      .then(function(data) {
+        $("#comic_img").attr('src', data.img);
+        $("#comic_title").html(data.title);
+      })
+      .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+    }
   </script>
 </head>
 
@@ -48,39 +88,40 @@
         </button>
         <a class="navbar-brand" href="#">The xkcd clone</a>
       </div>
-      <div class="collapse navbar-collapse" id="myNavbar">
+      <div class="collapse navbar-collapse" id="myNavbar">">
         <ul class="nav navbar-nav">
-          <li></li>
           <li></li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <div class="upper"><h2 id="comic_title" align="center"></h2></div>
+
   <div class="row">
     <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"></div>
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-10">
       <div class="btn-group btn-group-justified">
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(1);">
             <span class="glyphicon glyphicon-step-backward"></span> FIRST
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(2);">
             <span class="glyphicon glyphicon-backward"></span> PREV
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md"> RANDOM </button>
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(3);"> RANDOM </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(4);">
             NEXT <span class="glyphicon glyphicon-forward"></span>
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(5);">
             LAST <span class="glyphicon glyphicon-step-forward"></span>
           </button>
         </div>
@@ -88,41 +129,35 @@
     </div>
     <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"></div>
   </div>
+
   </br>
-  <!-- <div class="row"> -->
-    <!-- <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"></div> -->
-    <!-- <div class="col-lg-4 col-md-6 col-sm-6 col-xs-10"> -->
-    <!-- <img src="https://imgs.xkcd.com/comics/bill_nye.png" alt="xkcd.com" class="center"> -->
-    <img src="https://imgs.xkcd.com/comics/christmas_gps.png" alt="xkcd.com" class="center">
-    <!-- <img src="https://imgs.xkcd.com/comics/right_hand_rule.png" alt="xkcd.com" class="center"> -->
-    <!-- </div> -->
-    <!-- <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"></div> -->
-  <!-- </div> -->
+  <img id = "comic_img" alt="xkcd.com" class="center">
   </br>
+
   <div class="row">
     <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"></div>
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-10">
       <div class="btn-group btn-group-justified">
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(1);">
             <span class="glyphicon glyphicon-step-backward"></span> FIRST
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(2);">
             <span class="glyphicon glyphicon-backward"></span> PREV
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md"> RANDOM </button>
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(3);"> RANDOM </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(4);">
             NEXT <span class="glyphicon glyphicon-forward"></span>
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-md">
+          <button type="button" class="btn btn-primary btn-md" onclick="update_comic(5);">
             LAST <span class="glyphicon glyphicon-step-forward"></span>
           </button>
         </div>

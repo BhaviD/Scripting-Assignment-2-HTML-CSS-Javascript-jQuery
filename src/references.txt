@@ -27,3 +27,7 @@ https://www.w3schools.com/jsref/prop_img_width.asp
 https://www.quora.com/What-is-the-best-way-to-center-an-image-in-HTML
 https://stackoverflow.com/questions/16818192/how-to-make-a-image-center-in-a-div
 https://www.creativebloq.com/css3/control-image-aspect-ratios-css3-2122968
+https://codetheweb.blog/2017/12/12/style-a-navigation-bar-css/
+https://www.w3schools.com/Tags/att_font_size.asp
+https://love2dev.com/blog/absolute-centering-css/
+https://github.com/sidhantpanda/xkcd-api#get_latest
