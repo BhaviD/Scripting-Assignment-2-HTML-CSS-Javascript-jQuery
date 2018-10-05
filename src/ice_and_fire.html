@@ -143,14 +143,20 @@
           }
 
           $('#info_box' + row_num).append("<p><strong>Born: </strong><span id='born" + row_num + "' class='description'>" + entry.born + "</span></p>");
-            // }))
-            // .then(function(allies, rnum) {
-            //     console.log(allies);
-            //     console.log(rnum);
-            //     $('#info_box' + rnum).append("<p><strong>Allegiance: </strong><span id='alliance' class='description'>" + entry.name + "</span></p>");
-            // });
-                                    //     <p><strong>Died: </strong><span id='death' class='description'></span></p> \
-                                    //     <p><strong>Culture: </strong><span id='culture' class='description'></span></p> \
+
+          let died_str = "-";
+          if(entry.died != "") {
+            died_str = entry.died;
+          }
+          $('#info_box' + row_num).append("<p><strong>Died: </strong><span id='died" + row_num + "' class='description'>" + died_str + "</span></p>");
+
+          let culture_str = "-";
+          if(entry.culture != "") {
+            culture_str = entry.culture;
+          }
+          $('#info_box' + row_num).append("<p><strong>Culture: </strong><span id='culture" + row_num + "' class='description'>" + culture_str + "</span></p>");
+
+
                                     //     <p><strong>Title: </strong><span id='title' class='description'></span></p> \
                                     //     <p><strong>Alias: </strong><span id='alias' class='description'></span></p> \
                                     //     <p><strong>Spouse: </strong><span id='spouse' class='description'></span></p> \
@@ -189,26 +195,6 @@
 
     function input_search(){
       req_handlers[search_code]();
-      dynamic_update();
-    }
-
-    function dynamic_update()
-    {
-      $('#row1').html("<div class='col-md-1 col-lg-1'></div> \
-                        <div class='col-sm-12 col-md-10 col-lg-10'> \
-                          <div class='container-fluid' id='info_box' style='border-left: 10px solid red; border-bottom: 1px solid red;'> \
-                            <h1><strong>Jon Snow (<span class='glyphicon glyphicon glyphicon-user'></span>)</strong> </h1> \
-                        </div> \
-                       </div> \
-                      <div class='col-md-1 col-lg-1'></div>");
-      $('#info_container').append("<div id='row2' class='row justify-content-center'></div>");
-      $('#row2').html("<div class='col-md-1 col-lg-1'></div> \
-                        <div class='col-sm-12 col-md-10 col-lg-10'> \
-                          <div class='container-fluid' id='info_box' style='border-left: 10px solid red; border-bottom: 1px solid red;'> \
-                            <h1><strong>Jon Snow (<span class='glyphicon glyphicon glyphicon-user'></span>)</strong> </h1> \
-                        </div> \
-                       </div> \
-                      <div class='col-md-1 col-lg-1'></div>");
     }
   </script>
 </head>

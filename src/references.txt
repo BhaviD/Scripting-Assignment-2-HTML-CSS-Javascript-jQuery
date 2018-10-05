@@ -56,3 +56,13 @@ https://codepen.io/frederickalcantara/pen/aWeXOz
 https://stackoverflow.com/questions/50702802/how-to-print-all-character-names-from-game-of-thrones-api-which-is-in-paginated
 https://getbootstrap.com/docs/4.1/components/card/
 https://getbootstrap.com/docs/4.0/layout/grid/
+https://stackoverflow.com/questions/15946280/how-to-pass-a-variable-to-getjson-callback-function-on-success
+https://stackoverflow.com/questions/3115360/multi-line-string-insert-using-jquery
+http://jsfiddle.net/gLrhnqo2/
+https://makitweb.com/dynamically-add-and-remove-element-with-jquery/
+https://www.encodedna.com/2013/07/dynamically-add-remove-textbox-control-using-jquery.htm
+https://www.w3schools.com/html/html_styles.asp
+https://www.w3schools.com/jsref/prop_style_border.asp
+https://stackoverflow.com/questions/14477156/text-not-wrapping-in-p-tag/14477222
+https://codepen.io/frederickalcantara/pen/aWeXOz
+https://getbootstrap.com/docs/4.1/components/alerts/
