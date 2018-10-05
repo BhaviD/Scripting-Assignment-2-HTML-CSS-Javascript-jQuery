@@ -13,7 +13,17 @@
     div.upper {
       text-transform: uppercase;
     }
+    #info_box {
+      background-color: rgba(100, 100, 100, 0.7);
+      padding: 25px 20px;
+      margin: 60px auto 0px auto;
+      color: #000;
+      border: thin dotted red;
+    }
+    p { word-break: break-all }
 
+    textarea.boundary {width: 100%; height: 50%;
+                       padding: 10px 10px; resize: none;}
   </style>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -21,9 +31,12 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script>
+    var search_code;
+    var dpdown_title;
+    var is_disabled;
+
     function update(opcode) {
-      var dpdown_title;
-      var is_disabled;
+      search_code = opcode;
       switch(opcode)
       {
         case 1:
@@ -57,15 +70,35 @@
     }
 
     function input_search(){
-      var bla = $('#search_box').val();
-      alert(bla);
+      var input_str = $('#search_box').val();
+      var words = input_str.split(" ");
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      url = "https://anapioficeandfire.com/api/characters/?name=" + words[0];
+      $.each(words, function(index, w) {
+        if(index != 0)
+        {
+          if(w != "")
+            url += "+" + w;
+        }
+      });
+      // alert(url);
+      $('#search_box').val("");
+      $("#search_box").attr('disabled', is_disabled);
+      $("#search_box").attr('placeholder', dpdown_title);
+
+      fetch(proxyurl + url)
+      .then((response) => response.json())
+      .then(function(data) {
+        console.log(data[0]);
+      })
+      .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
     }
   </script>
 </head>
 
 <body background="got3.jpg">
   <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
+    <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">The Search of Ice and Fire</a>
       </div>
@@ -83,7 +116,7 @@
           <div class="input-group">
             <input autocomplete="false" name="hidden" id="search_box" type="text" class="form-control" size="30px" disabled>
             <div class="input-group-btn">
-              <button class="btn btn-default" onclick="input_search();">
+              <button class="btn btn-default" onclick="input_search();" type="button">
                 <i class="glyphicon glyphicon-search"></i>
               </button>
             </div>
@@ -92,5 +125,35 @@
       </ul>
     </div>
   </nav>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-1 col-lg-1"></div>
+      <div class="col-sm-12 col-md-10 col-lg-10">
+        <div class="container-fluid" id="info_box">
+          <p><strong>Name: </strong><span id="name"></span></p>
+        </div>
+      </div>
+      <div class="col-md-1 col-lg-1"></div>
+    </div>
+  	<div class="row justify-content-center">
+      <div class="col-md-1 col-lg-1"></div>
+      <div class="col-sm-12 col-md-10 col-lg-10">
+        <div class="container-fluid" id="info_box">
+          <p><strong>Name: </strong><span id="name"></span></p>
+          <p>Allegiance: <span id="alliance"></span></p>
+          <p>Born: <span id="born"></span></p>
+          <p>Died: <span id="death"></span></p>
+          <p>Culture: <span id="culture"></span></p>
+          <p>Title: <span id="title"></span></p>
+          <p>Alias: <span id="alias"></span></p>
+          <p>Spouse: <span id="spouse"></span></p>
+          <p>Seasons: <span id="seasons"></span></p>
+          <p>Played by: <span id="actor"></span></p>
+        </div>
+      <div class="col-md-1 col-lg-1"></div>
+        <!--end of col-->
+    </div>
+  </div>
 </body>
 </html>
