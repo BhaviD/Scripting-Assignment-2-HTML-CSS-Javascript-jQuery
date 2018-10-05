@@ -31,6 +31,7 @@
         $("#comic_img").attr('src', data.img);
         $("#comic_title").html(data.title);
         last_num = data.num;
+        comic_num = last_num;
       })
       .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
     });
@@ -45,7 +46,10 @@
 
         case 2: // PREV
           if(comic_num == 1)
-            break;
+          {
+            alert("This is the first comic!!");
+            return;
+          }
           --comic_num;
           break;
 
@@ -55,7 +59,10 @@
 
         case 4: // NEXT
           if(comic_num == last_num)
-            break;
+          {
+            alert("This is the last comic!!");
+            return;
+          }
           ++comic_num;
           break;
 
