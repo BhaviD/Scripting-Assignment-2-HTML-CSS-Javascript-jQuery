@@ -2,17 +2,6 @@
 <head>
   <title> The Search of Ice and Fire </title>
   <style>
-    img {
-      display: block;
-      object-fit: contain;
-      margin-left: auto;
-      margin-right: auto;
-      min-height: 300px;
-      min-width: 300px;
-    }
-    div.upper {
-      text-transform: uppercase;
-    }
     .row_margin {
       margin: 40px 0px 0px 0px;
     }
@@ -26,12 +15,13 @@
       color: white;
     }
     p {
-      word-break: break-all ;
+      white-space: pre-wrap;
       font-size: 125%
     }
-
-    textarea.boundary {width: 100%; height: 50%;
-                       padding: 10px 10px; resize: none;}
+    input::placeholder {
+      font-size: 1.2em;
+      font-style: italic;
+    }
   </style>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -42,7 +32,6 @@
     var search_code;
     var dpdown_title;
     var is_disabled;
-    var row_num=0;
     var req_handlers = [character_by_name, house_by_name, random_character, random_house, random_character_from_house];
 
     function update(opcode) {
@@ -60,12 +49,12 @@
           break;
 
         case 2:
-          dpdown_title = "Random Character"
+          dpdown_title = "Random Character... press search icon!"
           is_disabled = true;
           break;
 
         case 3:
-          dpdown_title = "Random House"
+          dpdown_title = "Random House... press search icon!"
           is_disabled = true;
           break;
 
@@ -81,10 +70,15 @@
 
     function character_by_name()
     {
-      let row_num = 1;
       let input_str = $('#search_box').val();
+
+      if(input_str == "")
+      {
+        no_search_result("Please provide input!");
+        return;
+      }
+
       let words = input_str.split(" ");
-      const proxyurl = "https://cors-anywhere.herokuapp.com/";
       url = "https://anapioficeandfire.com/api/characters/?name=" + words[0];
       $.each(words, function(index, w) {
         if(index != 0)
@@ -93,108 +87,350 @@
             url += "+" + w;
         }
       });
-      $('#search_box').val("");
-      $("#search_box").attr('disabled', is_disabled);
-      $("#search_box").attr('placeholder', dpdown_title);
 
-      fetch(proxyurl + url)
+      let row_num = 1;
+      fetch(url)
       .then((response) => response.json())
-      .then(function(data) {
-        console.log(data);
-        $.each(data, function(i, entry) {
-          $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
-                                    <div class='col-sm-12 col-md-10 col-lg-10'> \
-                                      <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid red; border-bottom: 1px solid red;'> \
-                                        <h1 id='head" + row_num + "'><strong>" + entry.name + " (<span class='glyphicon glyphicon glyphicon-user'></span>)</strong> </h1> \
-                                      </div> \
-                                    </div> \
-                                    <div class='col-md-1 col-lg-1'></div>");
-          ++row_num;
-          $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center'></div>");
-
-          $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
-                                    <div class='col-sm-12 col-md-10 col-lg-10'> \
-                                      <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid black; border-bottom: 1px solid black;'> \
-                                      </div> \
-                                    </div> \
-                                    <div class='col-md-1 col-lg-1'></div>");
-          $('#info_box' + row_num).append("<p><strong>Name: </strong><span id='name" + row_num + "' class='description'>" + entry.name + "</span></p>");
-          $('#info_box' + row_num).append("<p><strong>Allegiance: </strong><span id='alliance" + row_num + "' class='description'></span></p>");
-
-          if(entry.allegiances.length > 0)
-          {
-            $.each(entry.allegiances, function(j, ally) {
-                $.getJSON(ally, (function(rnum, idx) {
-                    return function(json) {
-                      let ally_name = $('#alliance' + rnum).val();
-                      if(idx == 0) {
-                        ally_name = json.name;
-                      }
-                      else {
-                        ally_name += ", " + json.name;
-                      }
-                      $('#alliance' + rnum).html(ally_name);
-                };
-              })(row_num, j));
-            });
-          }
-          else {
-            $('#alliance' + row_num).html("None");
-          }
-
-          $('#info_box' + row_num).append("<p><strong>Born: </strong><span id='born" + row_num + "' class='description'>" + entry.born + "</span></p>");
-
-          let died_str = "-";
-          if(entry.died != "") {
-            died_str = entry.died;
-          }
-          $('#info_box' + row_num).append("<p><strong>Died: </strong><span id='died" + row_num + "' class='description'>" + died_str + "</span></p>");
-
-          let culture_str = "-";
-          if(entry.culture != "") {
-            culture_str = entry.culture;
-          }
-          $('#info_box' + row_num).append("<p><strong>Culture: </strong><span id='culture" + row_num + "' class='description'>" + culture_str + "</span></p>");
-
-
-                                    //     <p><strong>Title: </strong><span id='title' class='description'></span></p> \
-                                    //     <p><strong>Alias: </strong><span id='alias' class='description'></span></p> \
-                                    //     <p><strong>Spouse: </strong><span id='spouse' class='description'></span></p> \
-                                    //     <p><strong>Seasons: </strong><span id='seasons' class='description'></span></p> \
-                                    //     <p><strong>Played by: </strong><span id='actor' class='description'></span></p> \
-                                    //   </div> \
-                                    // </div> \
-                                    // <div class='col-md-1 col-lg-1'></div>");
-          ++row_num;
-          $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center row_margin'></div>");
+      .then(function(character_data) {
+        if(character_data.length == 0)
+        {
+          no_search_result("Something went wrong!.. No Search Results!");
+          return;
+        }
+        $.each(character_data, function(i, entry) {
+          character_by_json(entry, row_num);
+          row_num += 2;
         });
-        console.log(data);
       })
-      .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+      .catch(function(error) {
+        no_search_result(error);
+      });
+    }
+
+    function character_by_json(entry, row_num)
+    {
+        $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center row_margin'></div>");
+        $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
+                                  <div class='col-sm-12 col-md-10 col-lg-10'> \
+                                    <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid red; border-bottom: 1px solid red;'> \
+                                      <h1 id='head" + row_num + "'><strong>" + entry.name + " (<span class='glyphicon glyphicon glyphicon-user'></span>)</strong> </h1> \
+                                    </div> \
+                                  </div> \
+                                  <div class='col-md-1 col-lg-1'></div>");
+        ++row_num;
+        $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center'></div>");
+
+        $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
+                                  <div class='col-sm-12 col-md-10 col-lg-10'> \
+                                    <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid black; border-bottom: 1px solid black;'> \
+                                    </div> \
+                                  </div> \
+                                  <div class='col-md-1 col-lg-1'></div>");
+
+        if(entry.allegiances.length > 0 && entry.allegiances[0] != "")
+        {
+          $('#info_box' + row_num).append("<p><strong>Allegiance: </strong><span id='alliance" + row_num + "' class='description'></span></p>");
+          $.each(entry.allegiances, function(i, ally) {
+            $.getJSON(ally, (function(idx, rnum) {
+                return function(json) {
+                  let ally_str = $('#alliance' + rnum).text();
+                  if(ally_str == "") {
+                    ally_str = json.name;
+                  }
+                  else {
+                    ally_str += ", " + json.name;
+                  }
+                  $('#alliance' + rnum).text(ally_str);
+              };
+            })(i, row_num));
+          });
+        }
+
+        if(entry.born != "") {
+          $('#info_box' + row_num).append("<p><strong>Born: </strong><span id='born" + row_num + "' class='description'>" + entry.born + "</span></p>");
+        }
+
+        if(entry.gender != "") {
+          $('#info_box' + row_num).append("<p><strong>Gender: </strong><span id='gender" + row_num + "' class='description'>" + entry.gender + "</span></p>");
+        }
+
+        if(entry.died != "") {
+          $('#info_box' + row_num).append("<p><strong>Died: </strong><span id='died" + row_num + "' class='description'>" + entry.died + "</span></p>");
+        }
+
+        if(entry.culture != "") {
+          $('#info_box' + row_num).append("<p><strong>Culture: </strong><span id='culture" + row_num + "' class='description'>" + entry.culture + "</span></p>");
+        }
+
+        if(entry.titles[0] != ""){
+          $('#info_box' + row_num).append("<p><strong>Titles: </strong><span id='titles" + row_num + "' class='description'>" + entry.titles.join(', ') + "</span></p>");
+        }
+
+        if(entry.aliases[0] != ""){
+          $('#info_box' + row_num).append("<p><strong>Alias: </strong><span id='aliases" + row_num + "' class='description'>" + entry.aliases.join(', ') + "</span></p>");
+        }
+
+        if (entry.spouse != "") {
+          $.getJSON(entry.spouse, (function(rnum) {
+            return function(spouse) {
+              $('#info_box' + rnum).append("<p><strong>Spouse: </strong><span id='spouse" + rnum + "' class='description'>" + spouse.name + "</span></p>");
+            };
+          })(row_num));
+        }
+
+        if(entry.tvSeries[0] != ""){
+          $('#info_box' + row_num).append("<p><strong>Seasons: </strong><span id='seasons" + row_num + "' class='description'>" + entry.tvSeries.join(', ') + "</span></p>");
+        }
+
+        if(entry.playedBy[0] != ""){
+          $('#info_box' + row_num).append("<p><strong>Played By: </strong><span id='playedby" + row_num + "' class='description'>" + entry.playedBy.join(', ') + "</span></p>");
+        }
+        ++row_num;
     }
 
     function house_by_name()
     {
-      ;
+      let input_str = $('#search_box').val();
+
+      if(input_str == "")
+      {
+        no_search_result("Please provide input!!");
+        return;
+      }
+
+      let words = input_str.split(" ");
+      url = "https://anapioficeandfire.com/api/houses/?name=" + words[0];
+      $.each(words, function(index, w) {
+        if(index != 0)
+        {
+          if(w != "")
+            url += "+" + w;
+        }
+      });
+
+      let row_num = 1;
+      fetch(url)
+      .then((response) => response.json())
+      .then(function(house_data) {
+        if(house_data.length == 0)
+        {
+          no_search_result("Something went wrong!.. No Search Results!");
+          return;
+        }
+        $.each(house_data, function(i, entry) {
+          house_by_json(entry, row_num);
+          row_num += 2;
+        });
+      })
+      .catch(function(error) {
+        no_search_result(error);
+      });
+    }
+
+    function house_by_json(entry, row_num)
+    {
+      $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center row_margin'></div>");
+      $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
+                                <div class='col-sm-12 col-md-10 col-lg-10'> \
+                                  <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid red; border-bottom: 1px solid red;'> \
+                                    <h1 id='head" + row_num + "'><strong>" + entry.name + " (<span class='glyphicon glyphicon glyphicon-tower'></span>)</strong> </h1> \
+                                  </div> \
+                                </div> \
+                                <div class='col-md-1 col-lg-1'></div>");
+
+      ++row_num;
+      $('#info_container').append("<div id='row" + row_num + "' class='row justify-content-center'></div>");
+      $('#row' + row_num).html("<div class='col-md-1 col-lg-1'></div> \
+                                <div class='col-sm-12 col-md-10 col-lg-10'> \
+                                  <div class='container-fluid info_box' id='info_box" + row_num + "' style='border-left: 10px solid black; border-bottom: 1px solid black;'> \
+                                  </div> \
+                                </div> \
+                                <div class='col-md-1 col-lg-1'></div>");
+
+      if(entry.coatOfArms != "") {
+        $('#info_box' + row_num).append("<p><strong>Coat Of Arms: </strong><span id='coatofarms" + row_num + "' class='description'>" + entry.coatOfArms + "</span></p>");
+      }
+
+      if (entry.currentLord != "") {
+        $.getJSON(entry.currentLord, (function(rnum) {
+          return function(currentLord) {
+            $('#info_box' + rnum).append("<p><strong>Current Lord: </strong><span id='spouse" + rnum + "' class='description'>" + currentLord.name + "</span></p>");
+          };
+        })(row_num));
+      }
+
+      if(entry.diedOut != "") {
+        $('#info_box' + row_num).append("<p><strong>Died Out: </strong><span id='diedout" + row_num + "' class='description'>" + entry.diedOut + "</span></p>");
+      }
+
+      if(entry.founded != "") {
+        $('#info_box' + row_num).append("<p><strong>Founded: </strong><span id='founded" + row_num + "' class='description'>" + entry.founded + "</span></p>");
+      }
+
+      if (entry.founder != "") {
+        $.getJSON(entry.founder, (function(rnum) {
+          return function(founder) {
+            $('#info_box' + rnum).append("<p><strong>Founder: </strong><span id='spouse" + rnum + "' class='description'>" + founder.name + "</span></p>");
+          };
+        })(row_num));
+      }
+
+      if(entry.heir != "") {
+        $.getJSON(entry.heir, (function(rnum) {
+          return function(heir) {
+            $('#info_box' + rnum).append("<p><strong>Heir: </strong><span id='spouse" + rnum + "' class='description'>" + heir.name + "</span></p>");
+          };
+        })(row_num));
+      }
+
+      if (entry.overlord != "") {
+        $.getJSON(entry.overlord, (function(rnum) {
+          return function(overlord) {
+            $('#info_box' + rnum).append("<p><strong>Overlord: </strong><span id='spouse" + rnum + "' class='description'>" + overlord.name + "</span></p>");
+          };
+        })(row_num));
+      }
+
+      if(entry.region != "") {
+        $('#info_box' + row_num).append("<p><strong>Region: </strong><span id='founded" + row_num + "' class='description'>" + entry.region + "</span></p>");
+      }
+
+      if(entry.swornMembers.length > 0 && entry.swornMembers[0] != "")
+      {
+        $('#info_box' + row_num).append("<p><strong>Sworn Members: </strong><span id='swornmembers" + row_num + "' class='description'></span></p>");
+        $.each(entry.swornMembers, function(i, member) {
+          $.getJSON(member, (function(idx, rnum) {
+              return function(json) {
+                let member_str = $('#swornmembers' + rnum).text();
+                if(member_str == "") {
+                  member_str = json.name;
+                }
+                else {
+                  member_str += ", " + json.name;
+                }
+                $('#swornmembers' + rnum).text(member_str);
+            };
+          })(i, row_num));
+        });
+      }
+
+      if(entry.titles[0] != "") {
+        $('#info_box' + row_num).append("<p><strong>Titles: </strong><span id='titles" + row_num + "' class='description'>" + entry.titles.join(', ') + "</span></p>");
+      }
+
+      if(entry.words != "") {
+        $('#info_box' + row_num).append("<p><strong>Words: </strong><span id='words" + row_num + "' class='description'>" + entry.words + "</span></p>");
+      }
+    }
+
+    function character_by_id_url(url)
+    {
+      fetch(url)
+      .then((response) => response.json())
+      .then(function(entry) {
+        character_by_json(entry);
+      })
+      .catch(function(error) {
+        no_search_result(error);
+      });
+    }
+
+    function character_by_id(id)
+    {
+      let url="https://anapioficeandfire.com/api/characters/" + id;
+      character_by_id_url(url);
     }
 
     function random_character()
     {
-      ;
+      let last_character_id = 2138;
+      let rand_character_id = Math.floor((Math.random() * last_character_id) + 1);
+      character_by_id(rand_character_id);
+    }
+
+    function house_by_id_url(url)
+    {
+      fetch(url)
+      .then((response) => response.json())
+      .then(function(entry) {
+        house_by_json(entry);
+      })
+      .catch(function(error) {
+        no_search_result(error);
+      });
+    }
+
+    function house_by_id(id)
+    {
+      let url="https://anapioficeandfire.com/api/houses/" + id;
+      house_by_id_url(url);
     }
 
     function random_house()
     {
-      ;
+      let last_house_id = 444;
+      let rand_house_id = Math.floor((Math.random() * last_house_id) + 1);
+      house_by_id(rand_house_id);
     }
 
     function random_character_from_house()
     {
-      ;
+      let input_str = $('#search_box').val();
+
+      if(input_str == "")
+      {
+        no_search_result("Please provide input!!");
+        return;
+      }
+
+      let words = input_str.split(" ");
+      url = "https://anapioficeandfire.com/api/houses/?name=" + words[0];
+      $.each(words, function(index, w) {
+        if(index != 0)
+        {
+          if(w != "")
+            url += "+" + w;
+        }
+      });
+
+      fetch(url)
+      .then((response) => response.json())
+      .then(function(house_data) {
+        if(house_data.length == 0)
+        {
+          no_search_result("Something went wrong!.. No Search Results!");
+          return;
+        }
+        rand_member_id = Math.floor((Math.random() * house_data[0].swornMembers.length));
+        character_by_id_url(house_data[0].swornMembers[rand_member_id]);
+      })
+      .catch(function(error) {
+        no_search_result(error);
+      });
+    }
+
+    function no_search_result(err)
+    {
+      $('#info_container').append("<div id='row1' class='row justify-content-center row_margin'></div>");
+      $('#row1').html("<div class='col-md-1 col-lg-1'></div> \
+                        <div class='col-sm-12 col-md-10 col-lg-10'> \
+                          <div class='container-fluid info_box' id='info_box1' style='border-left: 10px solid black; border-bottom: 1px solid black;'> \
+                            <h1 id='head1'><strong>" + err + " <span class='glyphicon glyphicon-remove'></span></strong> </h1> \
+                          </div> \
+                        </div> \
+                        <div class='col-md-1 col-lg-1'></div>");
     }
 
     function input_search(){
+      remove_all();
       req_handlers[search_code]();
+      $('#search_box').val("");
+      $("#search_box").attr('disabled', is_disabled);
+      $("#search_box").attr('placeholder', dpdown_title);
+    }
+
+    function remove_all() {
+      $('#info_container').html("");
     }
   </script>
 </head>
@@ -206,7 +442,7 @@
         <a class="navbar-brand" href="#">The Search of Ice and Fire</a>
       </div>
       <ul class="nav navbar-nav">
-        <li class="active dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span id="dropdown_title">Search Options</span> <span class="caret"></span></a>
+        <li class="active dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class='glyphicon glyphicon-th-list' style="font-size: 20px"></span> </a>
           <ul class="dropdown-menu">
             <li><a onclick="update(0);" href="#">Character By Name</a></li>
             <li><a onclick="update(1);" href="#">House By Name</a></li>
@@ -215,12 +451,12 @@
             <li><a onclick="update(4);" href="#">Random Character from House</a></li>
           </ul>
         </li>
-        <form class="navbar-form navbar-left" autocomplete="off">
+        <form class="navbar-form navbar-left">
           <div class="input-group">
-            <input autocomplete="false" name="hidden" id="search_box" type="text" class="form-control" size="30px" disabled>
+            <input id="search_box" type="text" class="form-control" size="40px" style="font-size: 17px" disabled>
             <div class="input-group-btn">
               <button class="btn btn-default" onclick="input_search();" type="button">
-                <i class="glyphicon glyphicon-search"></i>
+                <i class="glyphicon glyphicon-search" style="font-size: 20px"></i>
               </button>
             </div>
           </div>
@@ -229,34 +465,6 @@
     </div>
   </nav>
 
-  <div id="info_container" class="container">
-    <div id="row1" class="row justify-content-center">
-      <!-- <div class="col-md-1 col-lg-1"></div>
-      <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="container-fluid" id="info_box" style="border-left: 10px solid red; border-bottom: 1px solid red;">
-          <h1><strong>Jon Snow (<span class="glyphicon glyphicon glyphicon-user"></span>)</strong> </h1>
-        </div>
-      </div>
-      <div class="col-md-1 col-lg-1"></div> -->
-    </div>
-  	<!-- <div class="row justify-content-center">
-      <div class="col-md-1 col-lg-1"></div>
-      <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="container-fluid" id="info_box" style="border-left: 10px solid black; border-bottom: 1px solid black;">
-          <p><strong>Name: </strong><span id="name" class="description"></span></p>
-          <p><strong>Allegiance: </strong><span id="alliance" class="description"></span></p>
-          <p><strong>Born: </strong><span id="born" class="description"></span></p>
-          <p><strong>Died: </strong><span id="death" class="description"></span></p>
-          <p><strong>Culture: </strong><span id="culture" class="description"></span></p>
-          <p><strong>Title: </strong><span id="title" class="description"></span></p>
-          <p><strong>Alias: </strong><span id="alias" class="description"></span></p>
-          <p><strong>Spouse: </strong><span id="spouse" class="description"></span></p>
-          <p><strong>Seasons: </strong><span id="seasons" class="description"></span></p>
-          <p><strong>Played by: </strong><span id="actor" class="description"></span></p>
-        </div>
-      </div>
-      <div class="col-md-1 col-lg-1"></div>
-    </div> -->
-  </div>
+  <div id="info_container" class="container"></div>
 </body>
 </html>

@@ -66,3 +66,7 @@ https://www.w3schools.com/jsref/prop_style_border.asp
 https://stackoverflow.com/questions/14477156/text-not-wrapping-in-p-tag/14477222
 https://codepen.io/frederickalcantara/pen/aWeXOz
 https://getbootstrap.com/docs/4.1/components/alerts/
+https://stackoverflow.com/questions/24960201/how-do-i-make-glyphicons-bigger-change-size
+https://developer.mozilla.org/en-US/docs/Web/CSS/::placeholder
+https://stackoverflow.com/questions/23406112/css-word-wrap-that-wraps-whole-word-without-breaking-them
+https://stackoverflow.com/questions/1491743/how-to-set-a-value-for-a-span-using-jquery
